@@ -62,6 +62,14 @@ func MustReadOrderedT[T constraints.Integer | constraints.Float](buffer []byte, 
 	return val
 }
 
+// ReadOrderedTOrZero reads a value of type T from the given buffer starting at the specified offset,
+// using the specified byte order. If the byte order is nil, it defaults to binary.NativeEndian.
+// It returns the read value. If an error occurs during the read operation, it returns the zero value of type T.
+func ReadOrderedTOrZero[T constraints.Integer | constraints.Float](buffer []byte, offset int, order binary.ByteOrder) T {
+	val, _ := ReadOrderedT[T](buffer, offset, order)
+	return val
+}
+
 // ReadT reads a value of type T from the given buffer starting at the specified offset.
 // It uses binary.NativeEndian byte order. It returns the read value and any error encountered during the read operation.
 // See also: ReadOrderedT.
@@ -75,4 +83,12 @@ func ReadT[T constraints.Integer | constraints.Float](buffer []byte, offset int)
 // See also: ReadOrderedT.
 func MustReadT[T constraints.Integer | constraints.Float](buffer []byte, offset int) T {
 	return MustReadOrderedT[T](buffer, offset, binary.NativeEndian)
+}
+
+// ReadTOrZero reads a value of type T from the given buffer starting at the specified offset.
+// It uses the default byte order binary.NativeEndian and returns the read value.
+// Any error encountered during the read operation is ignored and the zero value for type T is returned instead.
+func ReadTOrZero[T constraints.Integer | constraints.Float](buffer []byte, offset int) T {
+	val, _ := ReadOrderedT[T](buffer, offset, binary.NativeEndian)
+	return val
 }
